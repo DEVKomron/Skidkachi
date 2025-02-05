@@ -35,7 +35,7 @@ export class UsersService {
     ])
 
     return{
-      access_toke: accessToken,
+      access_token: accessToken,
       refresh_token:refreshToken
     }
   }
