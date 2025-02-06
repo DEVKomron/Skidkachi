@@ -1,9 +1,11 @@
-import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, Injectable, InternalServerErrorException, UnauthorizedException } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { InjectModel } from '@nestjs/sequelize';
 import { User } from '../users/models/user.model';
 import * as bcrypt from 'bcrypt'
-import { SignInUserDto } from '../users/dto/sign_in-user.dto';
+import { CreateUserDto } from '../users/dto/create-user.dto';
+import { SignInDto } from '../users/dto/sign_in-user.dto';
+import { Response } from 'express';
 
 @Injectable()
 export class AuthService {
@@ -13,26 +15,63 @@ export class AuthService {
         private readonly userService: UsersService
     ) { }
 
-    async signIn(signInUserDto: SignInUserDto) {
+    async signUp(createUserDto: CreateUserDto) {
+        const condiate = await this.userService.findByEmail(createUserDto.email);
+        if (condiate) {
+            throw new BadRequestException("Bunday foydalanuvchi mavjud")
+        }
+        const newUser = await this.userService.create(createUserDto);
+        const response = {
+            message: "Tabriklayman tizimga qo'shildingin. Akkauntni faollastirish uchun emailingizga habar yubordik",
+            userId: newUser.id
+        }
 
-        if (!signInUserDto.email || !signInUserDto.password) {
+        return response
+    }
+
+    async signIn(signInDto: SignInDto, res: Response) {
+
+        const { email, password } = signInDto
+
+        if (!email || !password) {
             throw new BadRequestException()
         }
 
-        const user = await this.userModel.findOne({ where: { email: signInUserDto.email } })
+        const user = await this.userService.findByEmail(email)
+
         if (!user) {
             throw new UnauthorizedException('Invalid Email or password')
         }
-        const validPassword = await bcrypt.compare(signInUserDto.password, user.hashed_password)
+        if (!user.is_active) {
+            throw new UnauthorizedException('user is not activate')
+        }
+        const validPassword = await bcrypt.compare(signInDto.password, user.hashed_password)
         if (!validPassword) {
             throw new UnauthorizedException('Invalid Email or password')
         }
-        const tokens = await this.userService.getTokens(user)
-        user.hashed_refresh_token = tokens.refresh_token
 
-        await user.save()
+        const tokens = await this.userService.getTokens(user);
 
-        return { message: "welcome", accessToken: tokens.access_token }
+        const hashed_refresh_token = await bcrypt.hash(tokens.refresh_token, 7)
+
+        const updateUser = await this.userService.updateRefreshToken(
+            user.id,
+            hashed_refresh_token
+        )
+        if (!updateUser) {
+            throw new InternalServerErrorException("Tokenni saqlashda xatolik")
+        }
+        res.cookie("refresh_token", tokens.refresh_token, {
+            maxAge: 15 * 24 * 60 * 60 * 100,
+            httpOnly: true
+        })
+        const response = {
+            message: "User logged in",
+            userId: user.id,
+            access_token: tokens.access_token
+        };
+
+        return response
     }
 
 }

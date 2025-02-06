@@ -60,7 +60,7 @@ export class User extends Model<User, IUserCreationAttr> {
     @Column({
         type: DataType.STRING,
     })
-    hashed_refresh_token: string;
+    hashed_refresh_token: string | null;
     
     @Column({
         type: DataType.STRING,
