@@ -7,8 +7,8 @@ import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from "bcrypt"
 import * as uuid from "uuid"
 import { MailService } from '../mail/mail.service';
-import { link } from 'fs';
-import { where } from 'sequelize';
+// import { link } from 'fs';
+// import { where } from 'sequelize';
 
 
 @Injectable()
@@ -101,15 +101,15 @@ export class UsersService {
   }
 
   findAll() {
-    return `This action returns all users`;
+    return this.userModel.findAll()
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} user`;
+    return this.userModel.findByPk(id)
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+    return this.userModel.update(updateUserDto, {where:{id}, returning:true})[1][0]
   }
   async updateRefreshToken(id: number, hashed_refresh_token: string | null) {
     const updatedUser = await this.userModel.update(
@@ -122,6 +122,6 @@ export class UsersService {
     return updatedUser
   }
   remove(id: number) {
-    return `This action removes a #${id} user`;
+    return this.userModel.destroy({where:{id}})
   }
 }
