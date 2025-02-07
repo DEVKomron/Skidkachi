@@ -1,17 +1,34 @@
 import { NestFactory } from "@nestjs/core";
 import { AppModule } from "./app.module";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
-import { ValidationPipe } from "@nestjs/common";
+import { BadRequestException, ValidationPipe } from "@nestjs/common";
 import * as cookieParser from 'cookie-parser';
 
 async function start() {
   try {
     const PORT = process.env.PORT || 3030;
-
     const app = await NestFactory.create(AppModule);
-    app.useGlobalPipes(new ValidationPipe());
     app.use(cookieParser());
-
+    app.useGlobalPipes(new ValidationPipe());
+    app.enableCors({
+      origin:(origin, callback)=>{
+        const allowOrigins=[
+          "http://localhost:8000",
+          "http://localhost:3000",
+          "https://skidkachi.uz",
+          "https://api.skidkachi.uz",
+          "https://api.skidkachi.vercel.app",
+        ];
+        if(!origin || allowOrigins.includes(origin)){
+          callback(null , true)
+        }
+        else{
+          callback(new BadRequestException("Not allowed by CORS"));
+        }
+      },
+      methods: "GET, HEAD, PUT, PATCH, POST, DELETE",
+      credentials:true //cookie va header
+    });
     const config = new DocumentBuilder()
       .setTitle("Skidkachi.uz")
       // .setDescription("maqtash shart emas bilaman zo'r chiqan")
