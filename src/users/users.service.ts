@@ -108,9 +108,11 @@ export class UsersService {
     return this.userModel.findByPk(id)
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return this.userModel.update(updateUserDto, {where:{id}, returning:true})[1][0]
+  async update(id: number, updateUserDto: UpdateUserDto) {
+    const user = await this.userModel.update(updateUserDto, {where:{id}, returning:true})
+    return user[1][0]
   }
+  
   async updateRefreshToken(id: number, hashed_refresh_token: string | null) {
     const updatedUser = await this.userModel.update(
       { hashed_refresh_token },

@@ -19,6 +19,12 @@ export class AuthController {
     return this.authService.signUp(createUserDto)
   }
   
+  @ApiOperation({summary:"Admin ro'yxatdan o'tkazish"})
+  @Post('admin-sign-up')
+  adminSignUp(@Body() createAdminDto: CreateUserDto) {
+    return this.authService.adminSignUp(createAdminDto)
+  }
+
   @ApiOperation({summary:"Tizimga kirish"})
   @HttpCode(HttpStatus.OK)
   @Post('sign-in')

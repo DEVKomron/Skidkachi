@@ -33,7 +33,7 @@ export class AdminService {
       }),
     ])
     return {
-      access_toke: accessToken,
+      access_token: accessToken,
       refresh_token: refreshToken
     }
   }
@@ -64,11 +64,27 @@ export class AdminService {
     return this.adminModel.findByPk(id)
   }
 
-  update(id: number, updateAdminDto: UpdateAdminDto) {
-    return this.adminModel.update(updateAdminDto, {where:{id}, returning:true})[1][0]
+  async update(id: number, updateAdminDto: UpdateAdminDto) {
+    const admin = await this.adminModel.update(updateAdminDto, {where:{id}, returning:true})
+    return admin[1][0]
   }
 
   remove(id: number) {
     return this.adminModel.destroy({where:{id}})
   }
+  findByEmail(email: string) {
+    return this.adminModel.findOne({ where: { email } });
+  }
+
+  async updateRefreshToken(id: number, hashed_refresh_token: string | null) {
+    const updatedAdmin = await this.adminModel.update(
+      { hashed_refresh_token },
+      {
+        where: { id }
+      }
+    );
+
+    return updatedAdmin
+  }
 }
+
