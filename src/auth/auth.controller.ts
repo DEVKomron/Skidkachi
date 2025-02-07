@@ -20,7 +20,7 @@ export class AuthController {
   }
   
   @ApiOperation({summary:"Admin ro'yxatdan o'tkazish"})
-  @Post('admin-sign-up')
+  @Post('/admin/sign-up')
   adminSignUp(@Body() createAdminDto: CreateUserDto) {
     return this.authService.adminSignUp(createAdminDto)
   }
@@ -29,6 +29,16 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @Post('sign-in')
   signIn(
+    @Body() signInUserDto: SignInDto,
+    @Res({passthrough:true}) res : Response
+  ) {
+    return this.authService.signIn(signInUserDto, res)
+  }
+
+  @ApiOperation({summary:"Admin tizimga kirish"})
+  @HttpCode(HttpStatus.OK)
+  @Post('admin/sign-in')
+  adminSignIn(
     @Body() signInUserDto: SignInDto,
     @Res({passthrough:true}) res : Response
   ) {
