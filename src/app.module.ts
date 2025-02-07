@@ -5,6 +5,8 @@ import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { MailModule } from './mail/mail.module';
 import { AdminModule } from './admin/admin.module';
+import { CategoryModule } from './category/category.module';
+import { SocialLinkModule } from './social_link/social_link.module';
 
 @Module({
   imports: [
@@ -24,7 +26,9 @@ import { AdminModule } from './admin/admin.module';
     UsersModule,
     AuthModule,
     MailModule,
-    AdminModule
+    AdminModule,
+    CategoryModule,
+    SocialLinkModule
   ],
   controllers: [],
   providers: [],
