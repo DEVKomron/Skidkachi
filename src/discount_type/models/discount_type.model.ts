@@ -1,16 +1,12 @@
-import { ApiProperty } from "@nestjs/swagger";
 import { Column, DataType, Model, Table } from "sequelize-typescript";
 
-interface ISocialLinkCreationAttr {
+interface IDiscountTypeCreationAttr {
     name: string;
-    icon: string;
+    description: string;
 }
 
-@Table({tableName:"social_link"})
-export class SocialLink extends Model<SocialLink, ISocialLinkCreationAttr> {
-    @ApiProperty({
-        example: 1,
-    })
+@Table({tableName:'discount_type'})
+export class DiscountType extends Model<DiscountType, IDiscountTypeCreationAttr> {
     @Column({
         type: DataType.INTEGER,
         primaryKey: true,
@@ -28,5 +24,5 @@ export class SocialLink extends Model<SocialLink, ISocialLinkCreationAttr> {
         type: DataType.STRING,
         allowNull: false,
     })
-    icon: string;
+    description: string;
 }

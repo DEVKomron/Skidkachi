@@ -5,8 +5,16 @@ import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { MailModule } from './mail/mail.module';
 import { AdminModule } from './admin/admin.module';
-import { CategoryModule } from './category/category.module';
 import { SocialLinkModule } from './social_link/social_link.module';
+import { DiscountTypeModule } from './discount_type/discount_type.module';
+import { District } from './district/models/district.model';
+import { DistrictModule } from './district/district.module';
+import { RegionModule } from './region/region.module';
+import { Admin } from './admin/models/admin.model';
+import { DiscountType } from './discount_type/models/discount_type.model';
+import { Region } from './region/model/region.model';
+import { SocialLink } from './social_link/models/social_link.model';
+import { User } from './users/models/user.model';
 
 @Module({
   imports: [
@@ -18,7 +26,15 @@ import { SocialLinkModule } from './social_link/social_link.module';
       port: Number(process.env.POSTGRES_PORT),
       password: process.env.POSTGRES_PASSWORD,
       database: process.env.POSTGRES_DB,
-      models: [],
+      models: [
+        Admin,
+        District,
+        DiscountType,
+        Region,
+        SocialLink,
+        User
+
+      ],
       autoLoadModels: true,
       sync: { alter: true },
       logging: true
@@ -27,8 +43,10 @@ import { SocialLinkModule } from './social_link/social_link.module';
     AuthModule,
     MailModule,
     AdminModule,
-    CategoryModule,
-    SocialLinkModule
+    SocialLinkModule,
+    DiscountTypeModule,
+    DistrictModule,
+    RegionModule
   ],
   controllers: [],
   providers: [],

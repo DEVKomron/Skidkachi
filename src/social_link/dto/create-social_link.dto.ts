@@ -1,1 +1,4 @@
-export class CreateSocialLinkDto {}
+export class CreateSocialLinkDto {
+    name: string;
+    icon: string;
+}
