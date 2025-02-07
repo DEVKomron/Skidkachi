@@ -15,6 +15,8 @@ import { DiscountType } from './discount_type/models/discount_type.model';
 import { Region } from './region/model/region.model';
 import { SocialLink } from './social_link/models/social_link.model';
 import { User } from './users/models/user.model';
+import { CategoryModule } from './category/category.module';
+import { Category } from './category/models/category.model';
 
 @Module({
   imports: [
@@ -32,8 +34,8 @@ import { User } from './users/models/user.model';
         DiscountType,
         Region,
         SocialLink,
-        User
-
+        User,
+        Category
       ],
       autoLoadModels: true,
       sync: { alter: true },
@@ -46,7 +48,8 @@ import { User } from './users/models/user.model';
     SocialLinkModule,
     DiscountTypeModule,
     DistrictModule,
-    RegionModule
+    RegionModule,
+    CategoryModule
   ],
   controllers: [],
   providers: [],
