@@ -17,9 +17,20 @@ import { SocialLink } from './social_link/models/social_link.model';
 import { User } from './users/models/user.model';
 import { CategoryModule } from './category/category.module';
 import { Category } from './category/models/category.model';
+import { BotModule } from './bot/bot.module';
+import { TelegrafModule } from 'nestjs-telegraf';
+import { BOT_NAME } from './app.constants';
 
 @Module({
   imports: [
+    TelegrafModule.forRootAsync({
+      botName:  BOT_NAME,
+      useFactory:()=>({
+        token: process.env.BOT_TOKEN||"your_token",
+        middlewares:[],
+        include:[BotModule]
+      })
+    }),
     ConfigModule.forRoot({ envFilePath: ".env", isGlobal: true }),
     SequelizeModule.forRoot({
       dialect: "postgres",
@@ -39,7 +50,7 @@ import { Category } from './category/models/category.model';
       ],
       autoLoadModels: true,
       sync: { alter: true },
-      logging: true
+      logging: false
     }),
     UsersModule,
     AuthModule,
@@ -49,7 +60,8 @@ import { Category } from './category/models/category.model';
     DiscountTypeModule,
     DistrictModule,
     RegionModule,
-    CategoryModule
+    CategoryModule,
+    BotModule
   ],
   controllers: [],
   providers: [],

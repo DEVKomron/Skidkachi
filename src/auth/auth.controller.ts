@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Param, Post, Res } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Param, Post, Res, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateUserDto } from '../users/dto/create-user.dto';
 import { UsersService } from '../users/users.service';
@@ -6,6 +6,8 @@ import { SignInDto } from '../users/dto/sign_in-user.dto';
 import { ApiOperation } from '@nestjs/swagger';
 import { Response } from 'express';
 import { CookieGetter } from '../decorators/cookie-getter.decorator';
+import { SuperAdminGuard } from '../guards/superAdmin.guard';
+import { AdminGuard } from '../guards/admin.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -19,6 +21,8 @@ export class AuthController {
     return this.authService.signUp(createUserDto)
   }
 
+  @UseGuards(SuperAdminGuard)
+  @UseGuards(AdminGuard)
   @ApiOperation({ summary: "Admin ro'yxatdan o'tkazish" })
   @Post('/admin/sign-up')
   adminSignUp(@Body() createAdminDto: CreateUserDto) {
@@ -44,13 +48,13 @@ export class AuthController {
   ) {
     return this.authService.signIn(signInUserDto, res)
   }
-  
+
   @HttpCode(HttpStatus.OK)
   @Get("sign-out")
   signout(
     @CookieGetter("refresh_token") refreshToken: string,
     @Res({ passthrough: true }) res: Response
-  ){
+  ) {
     return this.authService.signOut(refreshToken, res)
   }
 
@@ -61,7 +65,7 @@ export class AuthController {
     @Param("id") userId: number,
     @CookieGetter("refresh_token") refreshToken: string,
     @Res({ passthrough: true }) res: Response
-  ) { 
+  ) {
     return this.authService.refreshToken(userId, refreshToken, res)
   }
 

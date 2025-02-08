@@ -33,8 +33,13 @@ async function start() {
       .setTitle("Skidkachi.uz")
       // .setDescription("maqtash shart emas bilaman zo'r chiqan")
       .setVersion("Abdulaziz-dev-v006")
-      .addBearerAuth()
-      .build();
+      .addBearerAuth(
+      //   {
+
+      // },
+      // "authorization"
+    )
+      .build()
     const document = SwaggerModule.createDocument(app, config);
 
     SwaggerModule.setup("api/docs", app, document, {

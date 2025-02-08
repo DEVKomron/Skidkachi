@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, InternalServerErrorException } from '@nestjs/common';
+import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectModel } from '@nestjs/sequelize';
@@ -7,6 +7,8 @@ import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from "bcrypt"
 import * as uuid from "uuid"
 import { MailService } from '../mail/mail.service';
+import { FindUserDto } from './dto/find-user.dto';
+import { Op } from 'sequelize';
 // import { link } from 'fs';
 // import { where } from 'sequelize';
 
@@ -109,10 +111,10 @@ export class UsersService {
   }
 
   async update(id: number, updateUserDto: UpdateUserDto) {
-    const user = await this.userModel.update(updateUserDto, {where:{id}, returning:true})
+    const user = await this.userModel.update(updateUserDto, { where: { id }, returning: true })
     return user[1][0]
   }
-  
+
   async updateRefreshToken(id: number, hashed_refresh_token: string | null) {
     const updatedUser = await this.userModel.update(
       { hashed_refresh_token },
@@ -124,6 +126,33 @@ export class UsersService {
     return updatedUser
   }
   remove(id: number) {
-    return this.userModel.destroy({where:{id}})
+    return this.userModel.destroy({ where: { id } })
+  }
+  async findUser(findUserDto: FindUserDto) {
+    const { name, email, phone } = findUserDto
+    const where = {}
+    if (name) {
+      where['name'] = {
+        [Op.iLike]: `%${name}%`
+      }
+    }
+    if (email) {
+      where['email'] = {
+        [Op.iLike]: `%${email}%`
+      }
+    }
+    if (phone) {
+      where['phone'] = {
+        [Op.like]: `%${phone}%`
+      }
+    }
+    console.log(where);
+
+    const users = await this.userModel.findAll({where})
+    if(!users){
+      throw new NotFoundException("User not found")
+    }
+    return users
+    
   }
 }
