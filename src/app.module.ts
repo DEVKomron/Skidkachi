@@ -20,6 +20,8 @@ import { Category } from './category/models/category.model';
 import { BotModule } from './bot/bot.module';
 import { TelegrafModule } from 'nestjs-telegraf';
 import { BOT_NAME } from './app.constants';
+import { StoreSocialLinkModule } from './store-social_link/store-social_link.module';
+import { StoreSocialLink } from './store-social_link/models/store-social_link.model';
 
 @Module({
   imports: [
@@ -46,7 +48,8 @@ import { BOT_NAME } from './app.constants';
         Region,
         SocialLink,
         User,
-        Category
+        Category,
+        StoreSocialLink
       ],
       autoLoadModels: true,
       sync: { alter: true },
@@ -61,7 +64,8 @@ import { BOT_NAME } from './app.constants';
     DistrictModule,
     RegionModule,
     CategoryModule,
-    BotModule
+    BotModule,
+    StoreSocialLinkModule
   ],
   controllers: [],
   providers: [],
