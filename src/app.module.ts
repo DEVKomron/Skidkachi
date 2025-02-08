@@ -24,6 +24,8 @@ import { StoreSocialLinkModule } from './store-social_link/store-social_link.mod
 import { StoreSocialLink } from './store-social_link/models/store-social_link.model';
 import { StoreModule } from './store/store.module';
 import { Store } from './store/models/store.model';
+import { StoreSubscribeModule } from './store_subscribe/store_subscribe.module';
+import { StoreSubscribe } from './store_subscribe/models/store_subscribe.model';
 
 @Module({
   imports: [
@@ -52,7 +54,8 @@ import { Store } from './store/models/store.model';
         User,
         Category,
         StoreSocialLink,
-        Store
+        Store,
+        StoreSubscribe
       ],
       autoLoadModels: true,
       sync: { alter: true },
@@ -69,7 +72,8 @@ import { Store } from './store/models/store.model';
     CategoryModule,
     BotModule,
     StoreSocialLinkModule,
-    StoreModule
+    StoreModule,
+    StoreSubscribeModule
   ],
   controllers: [],
   providers: [],

@@ -1,5 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";;
-import { Column, DataType, Table,Model } from "sequelize-typescript";
+import { Column, DataType, Table,Model, HasMany } from "sequelize-typescript";
+import { StoreSubscribe } from "../../store_subscribe/models/store_subscribe.model";
 
 interface IUserCreationAttr {
     name: string;
@@ -66,5 +67,8 @@ export class User extends Model<User, IUserCreationAttr> {
         type: DataType.STRING,
     })
     activation_link: string;
+
+    @HasMany(()=>StoreSubscribe)
+    store_subscribe:StoreSubscribe[]
 }
 
