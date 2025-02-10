@@ -26,6 +26,7 @@ import { StoreModule } from './store/store.module';
 import { Store } from './store/models/store.model';
 import { StoreSubscribeModule } from './store_subscribe/store_subscribe.module';
 import { StoreSubscribe } from './store_subscribe/models/store_subscribe.model';
+import { Bot } from './bot/models/bot.model';
 
 @Module({
   imports: [
@@ -55,7 +56,8 @@ import { StoreSubscribe } from './store_subscribe/models/store_subscribe.model';
         Category,
         StoreSocialLink,
         Store,
-        StoreSubscribe
+        StoreSubscribe,
+        Bot
       ],
       autoLoadModels: true,
       sync: { alter: true },
