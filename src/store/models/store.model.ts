@@ -4,6 +4,7 @@ import { District } from "../../district/models/district.model";
 import { User } from "../../users/models/user.model";
 import { StoreSocialLink } from "../../store-social_link/models/store-social_link.model";
 import { StoreSubscribe } from "../../store_subscribe/models/store_subscribe.model";
+import { Discount } from "../../discount/models/discount.model";
 
 interface IStoreCreationAttr {
     name: string;
@@ -83,4 +84,7 @@ export class Store extends Model<Store, IStoreCreationAttr> {
 
     @HasMany(() => StoreSubscribe)
     store_subscribe: StoreSubscribe[]
+
+    @HasMany(()=>Discount)
+    discount:Discount[]
 }

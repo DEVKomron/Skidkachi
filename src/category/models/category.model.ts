@@ -1,4 +1,5 @@
-import { Column, DataType, Model, Table } from "sequelize-typescript";
+import { Column, DataType, HasMany, Model, Table } from "sequelize-typescript";
+import { Discount } from "../../discount/models/discount.model";
 
 interface ICategoryCreationAttr {
     name: string;
@@ -24,5 +25,8 @@ export class Category extends Model<Category, ICategoryCreationAttr> {
         type: DataType.STRING,
         allowNull: false,
     })
-    description: string | null;
+    description: string | null; 
+
+    @HasMany(() => Discount)
+    discount: Discount[]
 }
