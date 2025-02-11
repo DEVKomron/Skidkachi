@@ -29,6 +29,8 @@ import { StoreSubscribe } from './store_subscribe/models/store_subscribe.model';
 import { Bot } from './bot/models/bot.model';
 import { DiscountModule } from './discount/discount.module';
 import { Discount } from './discount/models/discount.model';
+import { ReviewsModule } from './reviews/reviews.module';
+import { Review } from './reviews/models/review.model';
 
 @Module({
   imports: [
@@ -60,7 +62,8 @@ import { Discount } from './discount/models/discount.model';
         Store,
         StoreSubscribe,
         Bot,
-        Discount
+        Discount,
+        Review
       ],
       autoLoadModels: true,
       sync: { alter: true },
@@ -79,7 +82,8 @@ import { Discount } from './discount/models/discount.model';
     StoreSocialLinkModule,
     StoreModule,
     StoreSubscribeModule,
-    DiscountModule
+    DiscountModule,
+    ReviewsModule
   ],
   controllers: [],
   providers: [],

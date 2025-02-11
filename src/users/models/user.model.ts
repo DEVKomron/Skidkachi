@@ -1,20 +1,21 @@
 import { ApiProperty } from "@nestjs/swagger";;
-import { Column, DataType, Table,Model, HasMany } from "sequelize-typescript";
+import { Column, DataType, Table, Model, HasMany } from "sequelize-typescript";
 import { StoreSubscribe } from "../../store_subscribe/models/store_subscribe.model";
+import { Review } from "../../reviews/models/review.model";
 
 interface IUserCreationAttr {
     name: string;
     phone: string;
     email: string
     hashed_password: string;
-    activation_link:string
+    activation_link: string
 }
 
 @Table({ tableName: "users" })
 export class User extends Model<User, IUserCreationAttr> {
     @ApiProperty({
-        example:1,
-        description:"Foydalanuvchi ID raqami"
+        example: 1,
+        description: "Foydalanuvchi ID raqami"
     })
     @Column({
         type: DataType.INTEGER,
@@ -25,19 +26,19 @@ export class User extends Model<User, IUserCreationAttr> {
 
     @Column({
         type: DataType.STRING(30),
-        allowNull:false,
+        allowNull: false,
     })
     name: string;
-    
+
     @Column({
         type: DataType.STRING(20),
     })
     phone: string;
-    
+
     @Column({
         type: DataType.STRING,
-        allowNull:false,
-        unique:true
+        allowNull: false,
+        unique: true
     })
     email: string;
 
@@ -62,13 +63,16 @@ export class User extends Model<User, IUserCreationAttr> {
         type: DataType.STRING,
     })
     hashed_refresh_token: string | null;
-    
+
     @Column({
         type: DataType.STRING,
     })
     activation_link: string;
 
-    @HasMany(()=>StoreSubscribe)
-    store_subscribe:StoreSubscribe[]
+    @HasMany(() => StoreSubscribe)
+    store_subscribe: StoreSubscribe[]
+
+    @HasMany(() => Review)
+    review: Review[]
 }
 
