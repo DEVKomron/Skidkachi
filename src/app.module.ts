@@ -31,6 +31,8 @@ import { DiscountModule } from './discount/discount.module';
 import { Discount } from './discount/models/discount.model';
 import { ReviewsModule } from './reviews/reviews.module';
 import { Review } from './reviews/models/review.model';
+import { FavoritesModule } from './favorites/favorites.module';
+import { Favorite } from './favorites/models/favorite.model';
 
 @Module({
   imports: [
@@ -63,7 +65,8 @@ import { Review } from './reviews/models/review.model';
         StoreSubscribe,
         Bot,
         Discount,
-        Review
+        Review,
+        Favorite
       ],
       autoLoadModels: true,
       sync: { alter: true },
@@ -83,7 +86,8 @@ import { Review } from './reviews/models/review.model';
     StoreModule,
     StoreSubscribeModule,
     DiscountModule,
-    ReviewsModule
+    ReviewsModule,
+    FavoritesModule
   ],
   controllers: [],
   providers: [],

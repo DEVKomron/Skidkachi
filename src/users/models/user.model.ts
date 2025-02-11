@@ -1,7 +1,8 @@
 import { ApiProperty } from "@nestjs/swagger";;
-import { Column, DataType, Table, Model, HasMany } from "sequelize-typescript";
+import { Column, DataType, Table, Model, HasMany, BelongsToMany } from "sequelize-typescript";
 import { StoreSubscribe } from "../../store_subscribe/models/store_subscribe.model";
 import { Review } from "../../reviews/models/review.model";
+import { Favorite } from "../../favorites/models/favorite.model";
 
 interface IUserCreationAttr {
     name: string;
@@ -74,5 +75,9 @@ export class User extends Model<User, IUserCreationAttr> {
 
     @HasMany(() => Review)
     review: Review[]
+
+    @BelongsToMany(() => User, () => Favorite)
+    users : User[]
+
 }
 
