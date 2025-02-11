@@ -1,26 +1,50 @@
-import { Action, Command, Ctx, Hears, On, Start, Update } from "nestjs-telegraf";
+import {
+  Action,
+  Command,
+  Ctx,
+  Hears,
+  On,
+  Start,
+  Update,
+} from "nestjs-telegraf";
 import { Context, Markup } from "telegraf";
 import { BotService } from "./bot.service";
 
 @Update()
 export class BotUpdate {
-
-  constructor(
-    private readonly botService : BotService
-  ){}
+  constructor(private readonly botService: BotService) {}
 
   @Start()
   async onStart(@Ctx() ctx: Context) {
-    await this.botService.start(ctx)
+    await this.botService.start(ctx);
   }
 
-    @On("contact")
+  @On("contact")
   async onContact(@Ctx() ctx: Context) {
-    if ('contact' in ctx.message!) {
-      await this.botService.onContact(ctx)
+    if ("contact" in ctx.message!) {
+      await this.botService.onContact(ctx);
     }
   }
+  @Command("stop")
+  async onStop(@Ctx() ctx: Context) {
+    console.log("hello");
+    await this.botService.onStop(ctx);
+  }
 
+  @On("location")
+  async onLocation(@Ctx() ctx: Context) {
+    await this.botService.onLocation(ctx)
+  }
+
+  @On("text")
+  async onText(@Ctx() ctx: Context) {
+    await this.botService.onText(ctx);
+  }
+
+  @On("message")
+  async onMessage(@Ctx() ctx: Context) {
+    console.log("Kutilmagan habar");
+  }
 
   // @Hears("hi")
   // async onHier(@Ctx() ctx: Context) {
@@ -113,22 +137,6 @@ export class BotUpdate {
   //   }
   // }
 
-
-  // @On("text")
-  // async onText(@Ctx() ctx: Context) {
-  //   console.log(ctx.from);
-  //   console.log(ctx.chat);
-
-  //   if ("text" in ctx.message!) {
-  //     if (ctx.message.text === "salom") {
-  //       await ctx.replyWithHTML("<b>Vaaleykum assalom</b>")
-  //     }
-  //     else {
-  //       await ctx.reply(ctx.message.text)
-  //     }
-  //   }
-  // }
-
   // @On("photo")
   // async onPhoto(@Ctx() ctx: Context) {
   //   if ('photo' in ctx.message!) {
@@ -160,16 +168,6 @@ export class BotUpdate {
   //   }
   // }
 
-
-  // @On("location")
-  // async onLocation(@Ctx() ctx: Context) {
-  //   if ('location' in ctx.message!) {
-  //     console.log(ctx.message!.location);
-  //     await ctx.replyWithHTML(String(ctx.message.location.latitude))
-  //     await ctx.replyWithHTML(String(ctx.message.location.longitude))
-  //     await ctx.replyWithHTML(String(ctx.message.location.horizontal_accuracy))
-  //   }
-  // }
   // @On("voice")
   // async onVoice(@Ctx() ctx: Context) {
   //   if ('voice' in ctx.message!) {
@@ -192,16 +190,5 @@ export class BotUpdate {
   //     console.log(ctx.message!.document);
   //     await ctx.replyWithHTML(String(ctx.message.document))
   //   }
-  // }
-
-
-
-  // @On("message")
-  // async onMessage(@Ctx() ctx: Context) {
-  //   console.log(ctx.botInfo);
-  //   console.log(ctx.chat);
-  //   console.log(ctx.from);
-  //   console.log(ctx.from?.first_name);
-
   // }
 }

@@ -33,6 +33,7 @@ import { ReviewsModule } from './reviews/reviews.module';
 import { Review } from './reviews/models/review.model';
 import { FavoritesModule } from './favorites/favorites.module';
 import { Favorite } from './favorites/models/favorite.model';
+import { Address } from './bot/models/address.model';
 
 @Module({
   imports: [
@@ -66,7 +67,8 @@ import { Favorite } from './favorites/models/favorite.model';
         Bot,
         Discount,
         Review,
-        Favorite
+        Favorite,
+        Address
       ],
       autoLoadModels: true,
       sync: { alter: true },
@@ -87,7 +89,7 @@ import { Favorite } from './favorites/models/favorite.model';
     StoreSubscribeModule,
     DiscountModule,
     ReviewsModule,
-    FavoritesModule
+    FavoritesModule,
   ],
   controllers: [],
   providers: [],

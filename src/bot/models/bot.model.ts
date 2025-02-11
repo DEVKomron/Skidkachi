@@ -49,5 +49,6 @@ export class Bot extends Model<Bot, IBotCreationAttr> {
     })
     status :boolean
 
+    
 
 }
