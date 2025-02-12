@@ -274,7 +274,6 @@ export class BotService {
           ["Mening avtobillarim 🚗", "Yangi avtomobil qo'shish 🚗"],
         ]).resize(),
       });
-    
     } catch (error) {
       console.log("onDeleteCar: ", error);
     }
@@ -361,29 +360,29 @@ export class BotService {
                   ],
                 ]).resize(),
               });
-            } else if (car && car.last_state == "model") {
-              car.model = ctx.message.text;
-              car.last_state = "color";
-              await car.save();
-
-              await ctx.replyWithHTML(
-                "Iltimos avtomobilingiz rangini kiriting (maslan <b>oq, qora, qiliz, ko'k vahokozo...</b> ):",
-                {
-                  ...Markup.removeKeyboard(),
-                }
-              );
-            } else if (car && car.last_state == "color") {
-              car.color = ctx.message.text;
-              car.last_state = "year";
-              await car.save();
-
-              await ctx.replyWithHTML(
-                "Iltimos avtomobilingiz yilini kiriting (maslan 1998, 1999, 2000, 2001 vahokozo...):",
-                {
-                  ...Markup.removeKeyboard(),
-                }
-              );
             }
+          } else if (car && car.last_state == "model") {
+            car.model = ctx.message.text;
+            car.last_state = "color";
+            await car.save();
+
+            await ctx.replyWithHTML(
+              "Iltimos avtomobilingiz rangini kiriting (maslan <b>oq, qora, qiliz, ko'k vahokozo...</b> ):",
+              {
+                ...Markup.removeKeyboard(),
+              }
+            );
+          } else if (car && car.last_state == "color") {
+            car.color = ctx.message.text;
+            car.last_state = "year";
+            await car.save();
+
+            await ctx.replyWithHTML(
+              "Iltimos avtomobilingiz yilini kiriting (maslan 1998, 1999, 2000, 2001 vahokozo...):",
+              {
+                ...Markup.removeKeyboard(),
+              }
+            );
           }
         }
       }
