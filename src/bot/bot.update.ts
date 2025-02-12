@@ -33,7 +33,35 @@ export class BotUpdate {
 
   @On("location")
   async onLocation(@Ctx() ctx: Context) {
-    await this.botService.onLocation(ctx)
+    await this.botService.onLocation(ctx);
+  }
+
+  @Command("car")
+  async onCar(@Ctx() ctx: Context) {
+    await this.botService.onCar(ctx);
+  }
+
+  @Hears("Yangi avtomobil qo'shish 🚗")
+  async onAddNewCar(@Ctx() ctx: Context) {
+    await this.botService.onAddNewCar(ctx);
+  }
+
+  @Hears("Mening avtobillarim 🚗")
+  async onMyCars(@Ctx() ctx: Context) {
+    await this.botService.onMyCars(ctx);
+  }
+  
+  @Hears(
+    /^\d{2}[A-Z]\d{3}[A-Z]{2}$|^\d{2}\d{3}[A-Z]{3}$/
+  )
+  async onAddCarNumber(@Ctx() ctx: Context) {
+    await this.botService.onAddCarNumber(ctx);
+  }
+  @Hears(
+    /^19\d{2}$|^201[0-9]$|^202[0-5]$/ 
+  )
+  async onAddCarYear(@Ctx() ctx: Context) {
+    await this.botService.onAddCarYear(ctx);
   }
 
   @On("text")
@@ -44,6 +72,7 @@ export class BotUpdate {
   @On("message")
   async onMessage(@Ctx() ctx: Context) {
     console.log("Kutilmagan habar");
+    await ctx.reply("Kutilmagan habar😕")
   }
 
   // @Hears("hi")

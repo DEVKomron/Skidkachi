@@ -5,12 +5,15 @@ import { InjectBot } from "nestjs-telegraf";
 import { BOT_NAME } from "../app.constants";
 import { Context, Markup, Telegraf } from "telegraf";
 import { Address } from "./models/address.model";
+import { Car } from "./models/car.model";
+import { where } from "sequelize";
 
 @Injectable()
 export class BotService {
   constructor(
     @InjectModel(Bot) private readonly botModel: typeof Bot,
     @InjectModel(Address) private readonly addressModel: typeof Address,
+    @InjectModel(Car) private readonly carModel: typeof Car,
     @InjectBot(BOT_NAME) private readonly bot: Telegraf<Context>
   ) {}
 
@@ -147,6 +150,157 @@ export class BotService {
     }
   }
 
+  async onAddNewCar(ctx: Context) {
+    try {
+      const user_id = ctx.from?.id;
+      const user = await this.botModel.findByPk(user_id);
+
+      if (!user || !user.status) {
+        await ctx.reply(`Siz avval ro'yxatdan o'ting`, {
+          parse_mode: "HTML",
+          ...Markup.keyboard([["/start"]]).resize(),
+        });
+      } else {
+        const car = await this.carModel.create({
+          user_id,
+          last_state: "car_number",
+        });
+
+        await ctx.replyWithHTML(
+          "iltimos avtomobilingiz raqamini kiriting( masalan: <b>01A000AA</b> ) ",
+          {
+            ...Markup.removeKeyboard(),
+          }
+        );
+      }
+    } catch (error) {
+      console.log("onAddNewCar: ", error);
+    }
+  }
+  async onCar(ctx: Context) {
+    try {
+      await ctx.reply(`Foydalanuvchi Avtomobillari🚗`, {
+        parse_mode: "HTML",
+        ...Markup.keyboard([
+          ["Mening avtobillarim 🚗", "Yangi avtomobil qo'shish 🚗"],
+        ]).resize(),
+      });
+    } catch (error) {
+      console.log("onCarError: ", error);
+    }
+  }
+
+  async onAddCarNumber(ctx: Context) {
+    try {
+      const user_id = ctx.from?.id;
+      const user = await this.botModel.findByPk(user_id);
+
+      if (!user || !user.status) {
+        await ctx.reply(`Siz avval ro'yxatdan o'ting`, {
+          parse_mode: "HTML",
+          ...Markup.keyboard([["/start"]]).resize(),
+        });
+      } else {
+        if ("text" in ctx.message!) {
+          const car = await this.carModel.findOne({
+            where: { user_id },
+            order: [["id", "DESC"]],
+          });
+
+          if (car && car.last_state == "car_number") {
+            car.car_number = ctx.message.text;
+            car.last_state = "model";
+            await car.save();
+
+            await ctx.replyWithHTML(
+              "Mashinangizni modelini kiriting (maslan <b>Lacetti, Nexia, Matiz vahokozo...</b> ):",
+              {
+                ...Markup.removeKeyboard(),
+              }
+            );
+          }
+        }
+      }
+    } catch (error) {
+      console.log("onAddCarNumberError: ", error);
+    }
+  }
+  async onAddCarYear(ctx: Context) {
+    try {
+      const user_id = ctx.from?.id;
+      const user = await this.botModel.findByPk(user_id);
+
+      if (!user || !user.status) {
+        await ctx.reply(`Siz avval ro'yxatdan o'ting`, {
+          parse_mode: "HTML",
+          ...Markup.keyboard([["/start"]]).resize(),
+        });
+      } else {
+        if ("text" in ctx.message!) {
+          const car = await this.carModel.findOne({
+            where: { user_id },
+            order: [["id", "DESC"]],
+          });
+
+          if (car && car.last_state == "year") {
+            car.year = ctx.message.text;
+            car.last_state = "finish";
+            await car.save();
+
+            await ctx.replyWithHTML(
+              "Mashinangiz muvaffaqqiyatli qo'shildi, <b>Bergan ma'lumotlaringiz uchun rahmat</b>",
+              {
+                ...Markup.keyboard([
+                  ["Mening avtobillarim 🚗", "Yangi avtomobil qo'shish 🚗"],
+                ]).resize(),
+              }
+            );
+          }
+        }
+      }
+    } catch (error) {
+      console.log("onAddCarYearError: ", error);
+    }
+  }
+
+  async onMyCars(ctx: Context) {
+    try {
+      const user_id = ctx.from?.id;
+      const user = await this.botModel.findByPk(user_id);
+
+      if (!user || !user.status) {
+        await ctx.reply(`Siz avval ro'yxatdan o'ting`, {
+          parse_mode: "HTML",
+          ...Markup.keyboard([["/start"]]).resize(),
+        });
+      } else {
+        const cars = await this.carModel.findAll({
+          where: { user_id, last_state: "finish" },
+        });
+
+        cars.forEach(async (car) => {
+          await ctx.replyWithHTML(
+            `<b>Avtomobil modeli: </b> <i>${car.model} </i>\n<b>Avtomobil raqami:</b> <i>${car.car_number}</i>\n<b>Avtomobil rangi:</b> <i>${car.color}</i>\n<b>Avtomobil yili:</b> <i>${car.year}</i>`,
+            {
+              reply_markup: {
+                inline_keyboard: [
+                  [
+                    {
+                      text: "Avtomobilni o'chirish",
+                      callback_data: `carDel_${car.id}`,
+                    },
+                  ],
+                ],
+              },
+            }
+          );
+        });
+      }
+    } catch (error) {
+      console.log("onMyCarsError: ", error);
+    }
+  }
+
   async onText(ctx: Context) {
     try {
       if ("text" in ctx.message!) {
@@ -162,6 +316,11 @@ export class BotService {
             where: { user_id },
             order: [["id", "DESC"]],
           });
+          const car = await this.carModel.findOne({
+            where: { user_id },
+            order: [["id", "DESC"]],
+          });
+
           if (address && address.last_state != "finish") {
             if (address.last_state == "name") {
               address.name = ctx.message.text;
@@ -185,6 +344,28 @@ export class BotService {
                   ],
                 ]).resize(),
               });
+            } else if (car && car.last_state == "model") {
+              car.model = ctx.message.text;
+              car.last_state = "color";
+              await car.save();
+
+              await ctx.replyWithHTML(
+                "Iltimos avtomobilingiz rangini kiriting (maslan <b>oq, qora, qiliz, ko'k vahokozo...</b> ):",
+                {
+                  ...Markup.removeKeyboard(),
+                }
+              );
+            } else if (car && car.last_state == "color") {
+              car.color = ctx.message.text;
+              car.last_state = "year";
+              await car.save();
+
+              await ctx.replyWithHTML(
+                "Iltimos avtomobilingiz yilini kiriting (maslan 1998, 1999, 2000, 2001 vahokozo...):",
+                {
+                  ...Markup.removeKeyboard(),
+                }
+              );
             }
           }
         }

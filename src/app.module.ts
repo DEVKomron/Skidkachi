@@ -34,6 +34,7 @@ import { Review } from './reviews/models/review.model';
 import { FavoritesModule } from './favorites/favorites.module';
 import { Favorite } from './favorites/models/favorite.model';
 import { Address } from './bot/models/address.model';
+import { Car } from './bot/models/car.model';
 
 @Module({
   imports: [
@@ -68,7 +69,8 @@ import { Address } from './bot/models/address.model';
         Discount,
         Review,
         Favorite,
-        Address
+        Address,
+        Car
       ],
       autoLoadModels: true,
       sync: { alter: true },

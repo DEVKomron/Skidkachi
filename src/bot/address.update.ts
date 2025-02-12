@@ -3,11 +3,9 @@ import {
   Command,
   Ctx,
   Hears,
-  On,
-  Start,
   Update,
 } from "nestjs-telegraf";
-import { Context, Markup } from "telegraf";
+import { Context } from "telegraf";
 import { AddressService } from "./address.service";
 
 @Update()

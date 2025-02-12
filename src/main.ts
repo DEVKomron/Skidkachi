@@ -1,7 +1,7 @@
 import { NestFactory } from "@nestjs/core";
 import { AppModule } from "./app.module";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
-import { BadRequestException, ValidationPipe } from "@nestjs/common";
+import { ValidationPipe } from "@nestjs/common";
 import * as cookieParser from 'cookie-parser';
 
 async function start() {
@@ -11,21 +11,7 @@ async function start() {
     app.use(cookieParser());
     app.useGlobalPipes(new ValidationPipe());
     app.enableCors({
-      origin:(origin, callback)=>{
-        const allowOrigins=[
-          "http://localhost:8000",
-          "http://localhost:3000",
-          "https://skidkachi.uz",
-          "https://api.skidkachi.uz",
-          "https://api.skidkachi.vercel.app",
-        ];
-        if(!origin || allowOrigins.includes(origin)){
-          callback(null , true)
-        }
-        else{
-          callback(new BadRequestException("Not allowed by CORS"));
-        }
-      },
+      origin: "*",
       methods: "GET, HEAD, PUT, PATCH, POST, DELETE",
       credentials:true //cookie va header
     });
@@ -34,11 +20,17 @@ async function start() {
       // .setDescription("maqtash shart emas bilaman zo'r chiqan")
       .setVersion("Abdulaziz-dev-v006")
       .addBearerAuth(
-      //   {
+        {
+          type: "http",
+          scheme: "bearer",
+          bearerFormat: "JWT",
+          name: "JWT",
+          description: "Enter JWT token",
+          in: "header",
+        },
+        "parol"
+      )
 
-      // },
-      // "authorization"
-    )
       .build()
     const document = SwaggerModule.createDocument(app, config);
 
