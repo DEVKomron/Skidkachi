@@ -63,6 +63,10 @@ export class BotUpdate {
   async onAddCarYear(@Ctx() ctx: Context) {
     await this.botService.onAddCarYear(ctx);
   }
+  @Action(/^carDel_+\d+/)
+  async onDeleteCar(@Ctx() ctx: Context){
+    await this.botService.onDeleteCar(ctx);
+  }
 
   @On("text")
   async onText(@Ctx() ctx: Context) {
@@ -75,10 +79,7 @@ export class BotUpdate {
     await ctx.reply("Kutilmagan habar😕")
   }
 
-  // @Hears("hi")
-  // async onHier(@Ctx() ctx: Context) {
-  //   await ctx.replyWithHTML("salom")
-
+  
   // }
 
   // @Command('help')

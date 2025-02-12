@@ -262,6 +262,23 @@ export class BotService {
       console.log("onAddCarYearError: ", error);
     }
   }
+  async onDeleteCar(ctx: Context) {
+    try {
+      const contextAction = ctx.callbackQuery!["data"];
+      const car_id = contextAction.split("_")[1];
+      await this.carModel.destroy({ where: { id: car_id } });
+
+      await ctx.reply(`Avtomobil muvavvaqqiyatli o'chirildi`, {
+        parse_mode: "HTML",
+        ...Markup.keyboard([
+          ["Mening avtobillarim 🚗", "Yangi avtomobil qo'shish 🚗"],
+        ]).resize(),
+      });
+    
+    } catch (error) {
+      console.log("onDeleteCar: ", error);
+    }
+  }
 
   async onMyCars(ctx: Context) {
     try {
