@@ -9,6 +9,9 @@ import {
 } from "nestjs-telegraf";
 import { Context, Markup } from "telegraf";
 import { BotService } from "./bot.service";
+import { UseFilters, UseGuards } from "@nestjs/common";
+import { TelegrafExceptionFilter } from "../filters/telegraf-exception.filter";
+import { AdminBotGuard } from "../guards/admin-bot.guard";
 
 @Update()
 export class BotUpdate {
@@ -68,6 +71,13 @@ export class BotUpdate {
     await this.botService.onDeleteCar(ctx);
   }
 
+  @UseFilters(TelegrafExceptionFilter)
+  @UseGuards(AdminBotGuard)
+  @Command('admin')
+  async onAdminCommand(@Ctx()ctx: Context){
+    await this.botService.admin_menu(ctx, `Xush Kelibsiz ADMIN 🙋‍♂️`)
+  }
+
   @On("text")
   async onText(@Ctx() ctx: Context) {
     await this.botService.onText(ctx);
@@ -75,8 +85,7 @@ export class BotUpdate {
 
   @On("message")
   async onMessage(@Ctx() ctx: Context) {
-    console.log("Kutilmagan habar");
-    await ctx.reply("Kutilmagan habar😕")
+    await this.botService.OnDeleteMessage(ctx)
   }
 
   

@@ -278,6 +278,18 @@ export class BotService {
       console.log("onDeleteCar: ", error);
     }
   }
+  async admin_menu(ctx: Context, menu_text = `<b>Admin menyusi</b>`) {
+    try {
+      await ctx.reply(menu_text, {
+        parse_mode: "HTML",
+        ...Markup.keyboard([["Mijozlar", "Ustalar"]])
+          .resize()
+          .oneTime(),
+      });
+    } catch (error) {
+      console.log("Admin menyu error: ", error);
+    }
+  }
 
   async onMyCars(ctx: Context) {
     try {
@@ -388,6 +400,42 @@ export class BotService {
       }
     } catch (error) {
       console.log("OnTextError: ", error);
+    }
+  }
+
+  async OnDeleteMessage(ctx: Context) {
+    try {
+      const contextMessage = ctx.message?.message_id;
+      console.log(contextMessage);
+
+      await ctx.deleteMessage(contextMessage);
+    } catch (error) {
+      console.log("OnDeleteMessage: ", error);
+    }
+  }
+
+  async sendOtp(
+    phone_number: string,
+    OTP: string
+  ): Promise<boolean | undefined> {
+    try {
+      const user = await this.botModel.findOne({
+        where: { phone: phone_number },
+      });
+      console.log(user);
+
+      if (!user || !user.status) {
+        return false;
+      }
+
+      await this.bot.telegram.sendMessage(
+        user.user_id!,
+        "Verification OTP code: \n" + "```\n" + OTP + "\n```",
+        { parse_mode: "MarkdownV2" }
+      );
+      return true;
+    } catch (error) {
+      console.log("sendOtp error: ", error);
     }
   }
 }

@@ -6,6 +6,7 @@ import { UserGuard } from '../guards/user.guard';
 import { UserSelfGuard } from '../guards/user-self.guard';
 import { FindUserDto } from './dto/find-user.dto';
 import { AdminGuard } from '../guards/admin.guard';
+import { PhoneUserDto } from './dto/phone-user.dto';
 
 @Controller('users')
 export class UsersController {
@@ -13,6 +14,12 @@ export class UsersController {
 
   create(@Body() createUserDto: CreateUserDto) {
     return this.usersService.create(createUserDto);
+  }
+
+  @HttpCode(200)
+  @Post('newotp')
+  newOtp(@Body() phoneUserDto: PhoneUserDto) {
+    return this.usersService.newOtp(phoneUserDto);
   }
 
   @Get('activate/:link')
