@@ -17,8 +17,8 @@ async function start() {
     });
     const config = new DocumentBuilder()
       .setTitle("Skidkachi.uz")
-      // .setDescription("maqtash shart emas bilaman zo'r chiqan")
-      .setVersion("Abdulaziz-dev-v006")
+      .setDescription("maqtash shart emas bilaman zo'r chiqan")
+      .setVersion("komron")
       .addBearerAuth(
         {
           type: "http",

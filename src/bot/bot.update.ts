@@ -30,7 +30,6 @@ export class BotUpdate {
   }
   @Command("stop")
   async onStop(@Ctx() ctx: Context) {
-    console.log("hello");
     await this.botService.onStop(ctx);
   }
 
